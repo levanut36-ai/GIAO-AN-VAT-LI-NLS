@@ -88,8 +88,8 @@ if st.button("🚀 Bắt đầu soạn giáo án chuẩn Word", type="primary", 
                      - Cột 2: Hoạt động cụ thể của Giáo viên và Học sinh (Mô tả chi tiết hành động tương tác của GV và HS. KHÔNG viết lời thoại dài như kịch bản, không dùng ký hiệu "GV:", "HS:". Tập trung vào hành động thực tế).
 
                 QUY TẮC ĐỊNH DẠNG VÀ BIÊN SOẠN KHẮC KHÈO (VI PHẠM SẼ LÀM HỎNG FILE WORD):
-                1. KÝ TỰ IN ĐẬM: Tất cả các tiêu đề đề mục lớn và nhỏ (ví dụ: **I. Mục tiêu**, **1. Kiến thức**, **a) Mục tiêu**, **Bước 1: Chuyển giao nhiệm vụ**) bắt buộc phải dùng cú pháp markdown cặp hai dấu sao (**text**) để khi chuyển sang Word sẽ in đậm chuẩn xác.
-                2. CÔNG THỨC TOÁN HỌC / VẬT LÍ: Sử dụng định dạng LaTeX chuẩn trong ký hiệu $...$ cho công thức nằm trong dòng (Inline) hoặc $$...$$ cho công thức nằm riêng một dòng độc lập (Block). Ví dụ: $p = m.v$, $s = v_0.t + \\frac{1}{2}at^2$, $\\vec{p}_1 + \\vec{p}_2 = \\vec{p}$.
+                1. KÝ TỰ IN ĐẬM: Tất cả các tiêu đề đề mục lớn và nhỏ (ví dụ: **I. Mục tiêu**, **1. Kiến thức**, **a) Mục tiêu**, **Bước 1: Chuyển giao nhiệm vụ**) bắt buộc phải dùng cú pháp markdown cặp hai dấu sao để khi chuyển sang Word sẽ in đậm chuẩn xác.
+                2. CÔNG THỨC TOÁN HỌC / VẬT LÍ: Sử dụng định dạng LaTeX chuẩn trong ký hiệu $...$ cho công thức nằm trong dòng (Inline) hoặc $$...$$ cho công thức nằm riêng một dòng độc lập (Block). Ví dụ: $p = m \\cdot v$, $s = v_0 \\cdot t + \\frac{{1}}{{2}}at^2$, $p_1 + p_2 = p$.
                 3. TUYỆT ĐỐI KHÔNG DÙNG LATEX cho chữ viết thông thường, văn bản, tên hình (ví dụ: Hình 1), tên điểm (ví dụ: điểm A, điểm B), đơn vị đo đơn giản (ví dụ: m, s, kg, N, m/s). Chỉ dùng LaTeX cho các biểu thức toán học và phương trình vật lí phức tạp.
                 4. KHÔNG DÙNG DẤU BA CHẤM (...) để bỏ lửng nội dung, viết tắt hay lười giải bài tập. Tất cả câu hỏi, phiếu học tập đề ra đều phải có đáp án chi tiết và sản phẩm mẫu trọn vẹn của học sinh tại mục c).
                 5. RÀ SOÁT: Hãy tự đóng vai chuyên gia thẩm định rà soát lại toàn bộ hệ thống kiến thức vật lí, câu hỏi và đáp án để đảm bảo tính khoa học, chuẩn xác trước khi hoàn thành xuất văn bản.
