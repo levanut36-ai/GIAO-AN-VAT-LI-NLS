@@ -147,7 +147,7 @@ def tao_file_word_tron_goi(text_content):
                 row_cells[2].text = buoc_nls[key]
                 
                 row_cells[0].width = Inches(1.5)
-                row_cells.width = Inches(4.0)
+                row_cells[1].width = Inches(4.0)
                 row_cells[2].width = Inches(1.5)
                 set_cell_margins(row_cells[0])
                 set_cell_margins(row_cells[1])
@@ -190,13 +190,13 @@ if st.button("🚀 BẮT ĐẦU SOẠN GIÁO ÁN TRỌN GÓI MỘT MẠCH", type
                 
                 tong_thoi_gian = so_tiet * 45
                 
-                # SỬ DỤNG PHÉP NỐI CHUỖI CỘNG THUẦN TÚY ĐỂ LOẠI BỎ HOÀN TOÀN CÁC LỖI PHÂN TÍCH CHUỖI CỦA PYTHON
+                # SỬ DỤNG PHÉP NỐI CHUỖI CỘNG THUẦN TÚY ĐÃ ĐƯỢC ĐÍNH CHÍNH LỖI DẤU NGOẶC ĐƠN
                 prompt = (
                     "Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.\n"
                     "Thông tin cụ thể của bài học:\n"
                     "- Bài dạy: " + str(ten_bai) + "\n"
                     "- Khối lớp: " + str(khoi_lop) + "\n"
-                    "- Số tiết thực hiện: " + str(so_tiet) + " tiết (Tổng cộng " + str(tong_thoi_gian} + " phút).\n"
+                    "- Số tiết thực hiện: " + str(so_tiet) + " tiết (Tổng cộng " + str(tong_thoi_gian) + " phút).\n"
                     "- Cơ sở trường học: " + str(truong) + "\n"
                     "- Họ tên Giáo viên: " + str(giao_vien) + "\n"
                     "- Tổ bộ môn: " + str(to_chuyen_mon) + "\n"
