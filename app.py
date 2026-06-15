@@ -147,7 +147,7 @@ def tao_file_word_tron_goi(text_content):
                 row_cells[2].text = buoc_nls[key]
                 
                 row_cells[0].width = Inches(1.5)
-                row_cells[1].width = Inches(4.0)
+                row_cells.width = Inches(4.0)
                 row_cells[2].width = Inches(1.5)
                 set_cell_margins(row_cells[0])
                 set_cell_margins(row_cells[1])
@@ -190,17 +190,15 @@ if st.button("🚀 BẮT ĐẦU SOẠN GIÁO ÁN TRỌN GÓI MỘT MẠCH", type
                 
                 tong_thoi_gian = so_tiet * 45
                 
-                # THÊM KÝ TỰ r ĐỂ BIẾN THÀNH RAW STRING - AN TOÀN TUYỆT ĐỐI KHÔNG BỊ LỖI DẤU CHÉO NGƯỢC CỦA LATEX
-                prompt_template = r"""
-                Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.
-                - Bài dạy: {txt_ten_bai}
-                - Khối: {txt_khoi_lop}
-                - Số tiết: {txt_so_tiet} tiết (Tổng cộng {txt_tong_thoi_gian} phút).
-                - Trường: {txt_truong}
-                - Giáo viên: {txt_giao_vien}
-                - Tổ: {txt_to_chuyen_mon}
-                - Định hướng lồng ghép Năng lực số: {txt_mien_nls} bám sát Thông tư 02/2025/TT-BGDĐT.
-                - Yêu cầu riêng: {txt_muc_tieu_rieng}
-
-                YÊU CẦU CẤU TRÚC: Hãy viết một mạch liên tục đầy đủ tất cả các mục lớn từ đầu đến cuối bài (từ mục I cho đến hết mục IV), không được dừng lại giữa chừng, không dùng dấu ba chấm để bỏ lửng nội dung. Cấu trúc gồm:
-                **I. MỤC TIÊU** (Kiến thức; Năng lực chung, đặc thù, Năng lực số thành phần cụ thể; Phẩm chất).
+                # SỬ DỤNG PHÉP NỐI CHUỖI CỘNG THUẦN TÚY ĐỂ LOẠI BỎ HOÀN TOÀN CÁC LỖI PHÂN TÍCH CHUỖI CỦA PYTHON
+                prompt = (
+                    "Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.\n"
+                    "Thông tin cụ thể của bài học:\n"
+                    "- Bài dạy: " + str(ten_bai) + "\n"
+                    "- Khối lớp: " + str(khoi_lop) + "\n"
+                    "- Số tiết thực hiện: " + str(so_tiet) + " tiết (Tổng cộng " + str(tong_thoi_gian} + " phút).\n"
+                    "- Cơ sở trường học: " + str(truong) + "\n"
+                    "- Họ tên Giáo viên: " + str(giao_vien) + "\n"
+                    "- Tổ bộ môn: " + str(to_chuyen_mon) + "\n"
+                    "- Định hướng lồng ghép Năng lực số: " + str(mien_nls) + " bám sát Thông tư 02/2025/TT-BGDĐT.\n"
+                    "- Yêu cầu bổ sung đặc biệt từ giáo viên: " + str(muc_tieu_rieng) + "\n\n"
