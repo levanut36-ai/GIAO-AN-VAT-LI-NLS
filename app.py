@@ -58,11 +58,17 @@ if st.button("🚀 Bắt đầu soạn giáo án chuẩn Word", type="primary", 
     elif not ten_bai:
         st.warning("⚠️ Vui lòng điền 'Tên bài dạy chính xác' để hệ thống lập trình.")
     else:
-        with st.spinner("⏳ Hệ thống đang rà soát kiến thức Kết nối tri thức và thiết kế giáo án chia cột..."):
+        with st.spinner("⏳ Hệ thống đang mở rộng bộ nhớ và thiết kế giáo án chia cột chi tiết..."):
             try:
                 genai.configure(api_key=api_key)
-                # Sử dụng dòng mô hình mới ổn định lâu dài
-                model = genai.GenerativeModel('gemini-2.5-flash')
+                
+                # CẤU HÌNH QUYẾT ĐỊNH: Mở rộng tối đa số từ xuất ra cho Gemini để không bị mất Tiến trình dạy học
+                model_config = genai.GenerationConfig(
+                    max_output_tokens=8192,  # Ép AI viết dài hết cỡ, không được cắt ngắn nửa chừng
+                    temperature=0.3          # Giúp nội dung chính xác và tuân thủ kỷ luật sư phạm
+                )
+                
+                model = genai.GenerativeModel('gemini-2.5-flash', generation_config=model_config)
                 
                 # Câu lệnh Prompt cực kỳ chi tiết, ép AI tuân thủ mọi quy tắc văn bản
                 prompt = f"""
@@ -75,11 +81,11 @@ if st.button("🚀 Bắt đầu soạn giáo án chuẩn Word", type="primary", 
                 - Yêu cầu bổ sung: {muc_tieu_rieng}
 
                 QUY TẮC CẤU TRÚC (Bắt buộc tuân thủ Phụ lục IV Công văn 5512):
-                Văn bản xuất ra phải được trình bày theo cấu trúc phân cấp nghiêm ngặt. Các tiêu đề mục phải được IN ĐẬM.
+                Văn bản xuất ra phải được trình bày theo cấu trúc phân cấp nghiêm ngặt từ trên xuống dưới. Các tiêu đề mục phải được IN ĐẬM.
                 I. Mục tiêu (Ghi rõ Kiến thức, Năng lực - đặc biệt là năng lực số thành phần của {mien_nls} đạt {bac_nls}, và Phẩm chất).
                 II. Thiết bị dạy học và học liệu (Liệt kê cụ thể, bao gồm cả học liệu số hoặc công nghệ áp dụng).
                 III. Tiến trình dạy học: Gồm 4 hoạt động bắt buộc.
-                Trong MỖI hoạt động lớn (Hoạt động 1: Khởi động, Hoạt động 2: Hình thành kiến thức mới, Hoạt động 3: Luyện tập, Hoạt động 4: Vận dụng), phải trình bày đủ:
+                BẮT BUỘC KHÔNG ĐƯỢC BỎ QUA MỤC III NÀY. Trong MỖI hoạt động lớn (Hoạt động 1: Khởi động, Hoạt động 2: Hình thành kiến thức mới, Hoạt động 3: Luyện tập, Hoạt động 4: Vận dụng), phải trình bày đủ và viết hết toàn bộ chữ:
                   a) Mục tiêu
                   b) Nội dung
                   c) Sản phẩm (Bắt buộc phải viết chi tiết đáp án, lời giải bài tập, kết quả, định luật, không được bỏ trống hoặc ghi khái quát).
@@ -87,12 +93,12 @@ if st.button("🚀 Bắt đầu soạn giáo án chuẩn Word", type="primary", 
                      - Cột 1: Tiến trình sư phạm (Gồm 4 bước: Bước 1: Chuyển giao nhiệm vụ; Bước 2: Thực hiện nhiệm vụ; Bước 3: Báo cáo, thảo luận; Bước 4: Kết luận, nhận định).
                      - Cột 2: Hoạt động cụ thể của Giáo viên và Học sinh (Mô tả chi tiết hành động tương tác của GV và HS. KHÔNG viết lời thoại dài như kịch bản, không dùng ký hiệu "GV:", "HS:". Tập trung vào hành động thực tế).
 
-                QUY TẮC ĐỊNH DẠNG VÀ BIÊN SOẠN KHẮC KHÈO (VI PHẠM SẼ LÀM HỎNG FILE WORD):
+                QUY TẮC ĐỊNH DẠNG VÀ BIÊN SOẠN KHẮC KHÈO:
                 1. KÝ TỰ IN ĐẬM: Tất cả các tiêu đề đề mục lớn và nhỏ (ví dụ: **I. Mục tiêu**, **1. Kiến thức**, **a) Mục tiêu**, **Bước 1: Chuyển giao nhiệm vụ**) bắt buộc phải dùng cú pháp markdown cặp hai dấu sao để khi chuyển sang Word sẽ in đậm chuẩn xác.
                 2. CÔNG THỨC TOÁN HỌC / VẬT LÍ: Sử dụng định dạng LaTeX chuẩn trong ký hiệu $...$ cho công thức nằm trong dòng (Inline) hoặc $$...$$ cho công thức nằm riêng một dòng độc lập (Block). Ví dụ: $p = m \\cdot v$, $s = v_0 \\cdot t + \\frac{{1}}{{2}}at^2$, $p_1 + p_2 = p$.
                 3. TUYỆT ĐỐI KHÔNG DÙNG LATEX cho chữ viết thông thường, văn bản, tên hình (ví dụ: Hình 1), tên điểm (ví dụ: điểm A, điểm B), đơn vị đo đơn giản (ví dụ: m, s, kg, N, m/s). Chỉ dùng LaTeX cho các biểu thức toán học và phương trình vật lí phức tạp.
                 4. KHÔNG DÙNG DẤU BA CHẤM (...) để bỏ lửng nội dung, viết tắt hay lười giải bài tập. Tất cả câu hỏi, phiếu học tập đề ra đều phải có đáp án chi tiết và sản phẩm mẫu trọn vẹn của học sinh tại mục c).
-                5. RÀ SOÁT: Hãy tự đóng vai chuyên gia thẩm định rà soát lại toàn bộ hệ thống kiến thức vật lí, câu hỏi và đáp án để đảm bảo tính khoa học, chuẩn xác trước khi hoàn thành xuất văn bản.
+                5. RÀ SOÁT: Hãy tự đóng vai chuyên gia thẩm định rà soát lại toàn bộ hệ thống kiến thức vật lí, câu hỏi và đáp án để đảm bảo tính khoa học, chuẩn xác trước khi hoàn thành xuất văn bản. Hãy viết liên tục cho đến khi kết thúc Hoạt động 4, không được dừng lại giữa chừng.
                 """
                 
                 response = model.generate_content(prompt)
