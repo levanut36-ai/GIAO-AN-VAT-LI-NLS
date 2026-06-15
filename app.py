@@ -52,10 +52,16 @@ def tao_file_word_tron_goi(text_content):
     font.size = Pt(13)
     
     # Chia tách văn bản thành các khối Hoạt động lớn độc lập
-    parts = text_content.split('**Hoạt động')
+    if '**Hoạt động' in text_content:
+        parts = text_content.split('**Hoạt động')
+        header_part = parts[0]
+        activity_parts = parts[1:]
+    else:
+        header_part = text_content
+        activity_parts = []
     
     # Khối 1: Ghi phần Khung đầu, Mục I, Mục II trước khi vào tiến trình hoạt động
-    header_lines = parts[0].split('\n')
+    header_lines = header_part.split('\n')
     for line in header_lines:
         line_clean = line.replace('**', '').replace('###', '').replace('##', '').replace('#', '').strip()
         if not line_clean:
@@ -67,7 +73,7 @@ def tao_file_word_tron_goi(text_content):
             p.add_run(line_clean)
             
     # Xử lý bóc tách và kẻ bảng 3 cột tự động từ Hoạt động 1 đến Hoạt động 4
-    for part in parts[1:]:
+    for part in activity_parts:
         full_activity_text = "**Hoạt động" + part
         lines = full_activity_text.split('\n')
         
@@ -184,15 +190,17 @@ if st.button("🚀 BẮT ĐẦU SOẠN GIÁO ÁN TRỌN GÓI MỘT MẠCH", type
                 
                 tong_thoi_gian = so_tiet * 45
                 
-                # Biên soạn chuỗi câu lệnh prompt đóng gói an toàn tuyệt đối
-                prompt = (
-                    "Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.\n"
-                    f"- Bài dạy: {ten_bai} | Khối: {khoi_lop} | Số tiết: {so_tiet} tiết (Tổng cộng {tong_thoi_gian} phút).\n"
-                    f"- Trường: {truong} | Giáo viên: {giao_vien} | Tổ: {to_chuyen_mon}\n"
-                    f"- Định hướng lồng ghép Năng lực số: {mien_nls} bám sát Thông tư 02/2025/TT-BGDĐT.\n"
-                    f"- Yêu cầu riêng: {muc_tieu_rieng}\n\n"
-                    "YÊU CẦU CẤU TRÚC: Hãy viết một mạch liên tục đầy đủ tất cả các mục lớn từ đầu đến cuối bài (từ mục I cho đến hết mục IV), không được dừng lại giữa chừng, không dùng dấu ba chấm để bỏ lửng nội dung. Cấu trúc gồm:\n"
-                    "**I. MỤC TIÊU** (Kiến thức; Năng lực chung, đặc thù, Năng lực số thành phần cụ thể; Phẩm chất).\n"
-                    "**II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU** (Tách rõ Thiết bị; Học liệu SGK Kết nối tri thức; Công cụ số áp dụng và Mục đích sử dụng).\n"
-                    "**III. TIẾN TRÌNH DẠY HỌC**\n"
-                    "Phải viết đủ cả 4 hoạt động liên tục:\n"
+                # Sử dụng cấu trúc Triple Quotes thuần túy không lồng ngoặc để bảo đảm an toàn cú pháp 100%
+                prompt = f"""
+                Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.
+                - Bài dạy: {ten_bai}
+                - Khối: {khoi_lop}
+                - Số tiết: {so_tiet} tiết (Tổng cộng {tong_thoi_gian} phút).
+                - Trường: {truong}
+                - Giáo viên: {giao_vien}
+                - Tổ: {to_chuyen_mon}
+                - Định hướng lồng ghép Năng lực số: {mien_nls} bám sát Thông tư 02/2025/TT-BGDĐT.
+                - Yêu cầu riêng: {muc_tieu_rieng}
+
+                YÊU CẦU CẤU TRÚC: Hãy viết một mạch liên tục đầy đủ tất cả các mục lớn từ đầu đến cuối bài (từ mục I cho đến hết mục IV), không được dừng lại giữa chừng, không dùng dấu ba chấm để bỏ lửng nội dung. Cấu trúc gồm:
+                **I. MỤC TIÊU** (Kiến thức; Năng lực chung, đặc thù, Năng lực số thành phần cụ thể; Phẩm chất).
