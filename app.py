@@ -190,8 +190,8 @@ if st.button("🚀 BẮT ĐẦU SOẠN GIÁO ÁN TRỌN GÓI MỘT MẠCH", type
                 
                 tong_thoi_gian = so_tiet * 45
                 
-                # SỬ DỤNG CHUỖI THUẦN TÚY KHÔNG CÓ F-STRING ĐỂ BẢO ĐẢM AN TOÀN TUYỆT ĐỐI KHÔNG LỖI CÚ PHÁP
-                prompt_template = """
+                # THÊM KÝ TỰ r ĐỂ BIẾN THÀNH RAW STRING - AN TOÀN TUYỆT ĐỐI KHÔNG BỊ LỖI DẤU CHÉO NGƯỢC CỦA LATEX
+                prompt_template = r"""
                 Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.
                 - Bài dạy: {txt_ten_bai}
                 - Khối: {txt_khoi_lop}
