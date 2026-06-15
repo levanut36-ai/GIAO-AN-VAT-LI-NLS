@@ -41,7 +41,7 @@ def set_cell_margins(cell, top=100, bottom=100, left=150, right=150):
         tcMar.append(node)
     tcPr.append(tcMar)
 
-# Bộ xử lý thông minh bóc tách văn bản để vẽ bảng 3 cột tự động cho TỪNG hoạt động trong file Word
+# Bộ xử lý bóc tách văn bản để vẽ bảng 3 cột tự động cho TỪNG hoạt động trong file Word
 def tao_file_word_tron_goi(text_content):
     doc = Document()
     
@@ -51,24 +51,25 @@ def tao_file_word_tron_goi(text_content):
     font.name = 'Times New Roman'
     font.size = Pt(13)
     
-    sections = text_content.split('**Hoạt động')
+    # Chia tách văn bản thành các khối Hoạt động lớn độc lập
+    parts = text_content.split('**Hoạt động')
     
-    # Ghi phần Khung đầu, Mục I, Mục II trước khi gặp Hoạt động đầu tiên
-    header_lines = sections[0].split('\n')
+    # Khối 1: Ghi phần Khung đầu, Mục I, Mục II trước khi vào tiến trình hoạt động
+    header_lines = parts[0].split('\n')
     for line in header_lines:
         line_clean = line.replace('**', '').replace('###', '').replace('##', '').replace('#', '').strip()
         if not line_clean:
             continue
         p = doc.add_paragraph()
-        if line.startswith('#') or "I." in line or "II." in line or "III." in line or line.strip().startswith(('1.', '2.', '3.')):
+        if line.startswith('#') or any(m in line_clean for m in ["I. MỤC TIÊU", "II. THIẾT BỊ", "III. TIẾN TRÌNH", "1.", "2.", "3."]):
             p.add_run(line_clean).bold = True
         else:
             p.add_run(line_clean)
             
-    # Xử lý bóc tách kẻ bảng 3 cột cho từng Hoạt động từ Hoạt động 1 đến Hoạt động 4
-    for section in sections[1:]:
-        section_text = "**Hoạt động" + section
-        lines = section_text.split('\n')
+    # Xử lý bóc tách và kẻ bảng 3 cột tự động từ Hoạt động 1 đến Hoạt động 4
+    for part in parts[1:]:
+        full_activity_text = "**Hoạt động" + part
+        lines = full_activity_text.split('\n')
         
         buoc_hd = {"Bước 1": "", "Bước 2": "", "Bước 3": "", "Bước 4": ""}
         buoc_nls = {"Bước 1": "Không tích hợp.", "Bước 2": "Không tích hợp.", "Bước 3": "Không tích hợp.", "Bước 4": "Không tích hợp."}
@@ -105,7 +106,8 @@ def tao_file_word_tron_goi(text_content):
             else:
                 if current_buoc:
                     if "Tích hợp NLS:" in line_clean or "Năng lực số tích hợp:" in line_clean:
-                        buoc_nls[current_buoc] = line_clean.split(":", 1)[1].strip()
+                        clean_nls = line_clean.replace("Tích hợp NLS:", "").replace("Năng lực số tích hợp:", "").strip()
+                        buoc_nls[current_buoc] = clean_nls if clean_nls else "Không tích hợp."
                     else:
                         buoc_hd[current_buoc] += line_clean + "\n"
                         
@@ -135,7 +137,7 @@ def tao_file_word_tron_goi(text_content):
                 row_cells[0].paragraphs[0].runs[0].font.bold = True
                 
                 noi_dung_buoc = buoc_hd[key].replace(ten_buoc, "").strip()
-                row_cells[1].text = noi_dung_buoc if noi_dung_buoc else "Giáo viên điều phối hoạt động giảng dạy."
+                row_cells[1].text = noi_dung_buoc if noi_dung_buoc else "Giáo viên điều phối hoạt động giảng dạy theo phân phối chương trình."
                 row_cells[2].text = buoc_nls[key]
                 
                 row_cells[0].width = Inches(1.5)
@@ -144,13 +146,13 @@ def tao_file_word_tron_goi(text_content):
                 set_cell_margins(row_cells[0])
                 set_cell_margins(row_cells[1])
                 set_cell_margins(row_cells[2])
-            doc.add_paragraph() # Khoảng cách sau bảng
+            doc.add_paragraph() # Khoảng cách trống sau bảng
             
     bio = BytesIO()
     doc.save(bio)
     return bio.getvalue()
 
-# Khung nhập thông tin bài học Vật lí ở giữa
+# Khung nhập thông tin bài học Vật lí ở giao diện chính
 st.subheader("📝 Thông tin chung bài học")
 col1, col2 = st.columns(2)
 
@@ -173,7 +175,7 @@ if st.button("🚀 BẮT ĐẦU SOẠN GIÁO ÁN TRỌN GÓI MỘT MẠCH", type
     elif not ten_bai:
         st.warning("⚠️ Vui lòng nhập Tên bài dạy chính xác.")
     else:
-        with st.spinner("⏳ Hệ thống sở hữu 65.000 từ đang viết một mạch toàn bộ giáo án chuẩn 55 lí... Vui lòng đợi khoảng 30 giây!"):
+        with st.spinner("⏳ Trợ lý AI đang áp dụng siêu dung lượng để soạn một mạch toàn bộ giáo án chuẩn... Vui lòng đợi trong giây lát!"):
             try:
                 genai.configure(api_key=api_key)
                 # Kích hoạt toàn bộ sức mạnh số từ đầu ra cho Gemini 2.5 Flash
@@ -182,19 +184,15 @@ if st.button("🚀 BẮT ĐẦU SOẠN GIÁO ÁN TRỌN GÓI MỘT MẠCH", type
                 
                 tong_thoi_gian = so_tiet * 45
                 
-                prompt = f"""
-                Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.
-                - Bài dạy: {ten_bai} | Khối: {khoi_lop} | Số tiết: {so_tiet} tiết (Tổng cộng {tong_thoi_gian} phút).
-                - Trường: {truong} | Giáo viên: {giao_vien} | Tổ: {to_chuyen_mon}
-                - Định hướng lồng ghép Năng lực số: {mien_nls} bám sát Thông tư 02/2025/TT-BGDĐT.
-                - Yêu cầu riêng: {muc_tieu_rieng}
-
-                YÊU CẦU CẤU TRÚC: Hãy viết một mạch liên tục đầy đủ tất cả các mục lớn từ đầu đến cuối bài (từ mục I cho đến hết mục IV), không được dừng lại, không dùng dấu ba chấm để bỏ lửng. Cấu trúc gồm:
-                **I. MỤC TIÊU** (Kiến thức; Năng lực chung, đặc thù, Năng lực số thành phần cụ thể của {mien_nls}; Phẩm chất).
-                **II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU** (Tách rõ Thiết bị; Học liệu SGK Kết nối tri thức; Công cụ số áp dụng và Mục đích sử dụng).
-                **III. TIẾN TRÌNH DẠY HỌC**
-                  Phải viết đủ cả 4 hoạt động liên tục:
-                  - **Hoạt động 1: Mở đầu / Xác định vấn đề** (Thời gian cụ thể bằng số phút)
-                  - **Hoạt động 2: Hình thành kiến thức mới** (Thời gian cụ thể bằng số phút)
-                  - **Hoạt động 3: Luyện tập** (Thời gian cụ thể bằng số phút)
-                  - **Hoạt động 4: Vận dụng** (Thời gian cụ thể bằng số phút)
+                # Biên soạn chuỗi câu lệnh prompt đóng gói an toàn tuyệt đối
+                prompt = (
+                    "Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.\n"
+                    f"- Bài dạy: {ten_bai} | Khối: {khoi_lop} | Số tiết: {so_tiet} tiết (Tổng cộng {tong_thoi_gian} phút).\n"
+                    f"- Trường: {truong} | Giáo viên: {giao_vien} | Tổ: {to_chuyen_mon}\n"
+                    f"- Định hướng lồng ghép Năng lực số: {mien_nls} bám sát Thông tư 02/2025/TT-BGDĐT.\n"
+                    f"- Yêu cầu riêng: {muc_tieu_rieng}\n\n"
+                    "YÊU CẦU CẤU TRÚC: Hãy viết một mạch liên tục đầy đủ tất cả các mục lớn từ đầu đến cuối bài (từ mục I cho đến hết mục IV), không được dừng lại giữa chừng, không dùng dấu ba chấm để bỏ lửng nội dung. Cấu trúc gồm:\n"
+                    "**I. MỤC TIÊU** (Kiến thức; Năng lực chung, đặc thù, Năng lực số thành phần cụ thể; Phẩm chất).\n"
+                    "**II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU** (Tách rõ Thiết bị; Học liệu SGK Kết nối tri thức; Công cụ số áp dụng và Mục đích sử dụng).\n"
+                    "**III. TIẾN TRÌNH DẠY HỌC**\n"
+                    "Phải viết đủ cả 4 hoạt động liên tục:\n"
