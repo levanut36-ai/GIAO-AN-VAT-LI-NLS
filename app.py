@@ -190,17 +190,17 @@ if st.button("🚀 BẮT ĐẦU SOẠN GIÁO ÁN TRỌN GÓI MỘT MẠCH", type
                 
                 tong_thoi_gian = so_tiet * 45
                 
-                # Sử dụng cấu trúc Triple Quotes thuần túy không lồng ngoặc để bảo đảm an toàn cú pháp 100%
-                prompt = f"""
+                # SỬ DỤNG CHUỖI THUẦN TÚY KHÔNG CÓ F-STRING ĐỂ BẢO ĐẢM AN TOÀN TUYỆT ĐỐI KHÔNG LỖI CÚ PHÁP
+                prompt_template = """
                 Bạn là một chuyên gia giáo dục Vật lí xuất sắc cốt cán. Hãy thiết kế một kế hoạch bài dạy (Giáo án) HOÀN CHỈNH, TRỌN GÓI TỪ ĐẦU ĐẾN CUỐI bám sát chương trình SGK KẾT NỐI TRI THỨC môn Vật lí.
-                - Bài dạy: {ten_bai}
-                - Khối: {khoi_lop}
-                - Số tiết: {so_tiet} tiết (Tổng cộng {tong_thoi_gian} phút).
-                - Trường: {truong}
-                - Giáo viên: {giao_vien}
-                - Tổ: {to_chuyen_mon}
-                - Định hướng lồng ghép Năng lực số: {mien_nls} bám sát Thông tư 02/2025/TT-BGDĐT.
-                - Yêu cầu riêng: {muc_tieu_rieng}
+                - Bài dạy: {txt_ten_bai}
+                - Khối: {txt_khoi_lop}
+                - Số tiết: {txt_so_tiet} tiết (Tổng cộng {txt_tong_thoi_gian} phút).
+                - Trường: {txt_truong}
+                - Giáo viên: {txt_giao_vien}
+                - Tổ: {txt_to_chuyen_mon}
+                - Định hướng lồng ghép Năng lực số: {txt_mien_nls} bám sát Thông tư 02/2025/TT-BGDĐT.
+                - Yêu cầu riêng: {txt_muc_tieu_rieng}
 
                 YÊU CẦU CẤU TRÚC: Hãy viết một mạch liên tục đầy đủ tất cả các mục lớn từ đầu đến cuối bài (từ mục I cho đến hết mục IV), không được dừng lại giữa chừng, không dùng dấu ba chấm để bỏ lửng nội dung. Cấu trúc gồm:
                 **I. MỤC TIÊU** (Kiến thức; Năng lực chung, đặc thù, Năng lực số thành phần cụ thể; Phẩm chất).
